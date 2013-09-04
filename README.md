@@ -47,10 +47,10 @@ The Java (Netty & Grizzly frameworks) & Node.js programming approach based on ev
 
 ####SSD:
     $>cat urls.txt
-    $>http://169.254.145.145:8080/upload
-    $>http://169.254.145.145:8181/upload
-    $>http://169.254.145.145:8282/upload
-    $>http://169.254.145.145:8383/upload
+    http://169.254.145.145:8080/upload
+    http://169.254.145.145:8181/upload
+    http://169.254.145.145:8282/upload
+    http://169.254.145.145:8383/upload
 
     $>go run gobench.go -k=true -f urls.txt -c 500 -t 10 -d gobench.go
     Dispatching 500 clients
@@ -81,7 +81,7 @@ The Java (Netty & Grizzly frameworks) & Node.js programming approach based on ev
 ###Java:
     
 ####Grizzly:
-#####SSD:
+####SSD:
     $>go run gobench.go -k=true -u http://169.254.145.145:8080/upload -c 500 -t 10 -d gobench.go
     Dispatching 500 clients
     Waiting for results...
@@ -95,7 +95,7 @@ The Java (Netty & Grizzly frameworks) & Node.js programming approach based on ev
     Write throughput:                 77802220 bytes/sec
     Test time:                              10 sec
 
-#####tmpfs:
+####tmpfs:
     Dispatching 500 clients
     Waiting for results...
 
@@ -109,7 +109,7 @@ The Java (Netty & Grizzly frameworks) & Node.js programming approach based on ev
     Test time:                              10 sec
 
 ####Netty:
-#####SSD:
+####SSD:
     $>go run gobench.go -k=true -u http://169.254.145.145:8080/upload -c 500 -t 10 -d gobench.go
     Dispatching 500 clients
     Waiting for results...
@@ -123,7 +123,7 @@ The Java (Netty & Grizzly frameworks) & Node.js programming approach based on ev
     Write throughput:                 76813599 bytes/sec
     Test time:                              10 sec
 
-#####tmpfs:
+####tmpfs:
     Dispatching 500 clients
     Waiting for results...
 
@@ -164,11 +164,13 @@ The Java (Netty & Grizzly frameworks) & Node.js programming approach based on ev
     Write throughput:                110690736 bytes/sec
     Test time:                              10 sec
 
-* Conclusions:
+
+### Conclusions:
 1. cmpxchg16/Mordor give the best results both SSD & tmpfs
 2. Go win the Node.js
 3. Netty & Grizzly looking the ~= same
 4. The simplest one is Go
+
 
 Notes
 ================
@@ -177,29 +179,31 @@ Notes
 2. The implemetations missing some errors handling.
 3. I run the test 3 times for each server and choose the best one.
 4. Environment:
-4.1 Server:
+```
+    Server:
 
     Kernel : 3.5.0 - x86_64 (Ubuntu 12.10)
     CPU : Intel(R) Core(TM) i7-3720QM CPU @ 2.60GHz (4 cores)
     RAM : 4 GB 1600 MHz DDR3
     Filesystem: ext4 on a SSD
 
-4.2 Client:
+    Client:
 
     Kernel : Darwin Kernel Version 11.4.2 x86_64 (Mac OS X Lion 10.7.5)
     CPU : Intel(R) Core(TM) i7-3720QM CPU @ 2.60GHz (4 cores)
     RAM : 8 GB 1600 MHz DDR3
-
+```
 5. tcp sysctl configuration for client and server:
+```
+    net.ipv4.tcp_tw_recycle = 1
+    net.ipv4.tcp_tw_reuse = 1
+    net.ipv4.tcp_fin_timeout = 1
+    net.ipv4.tcp_timestamps = 1
+    net.ipv4.tcp_syncookies = 0
+    net.ipv4.ip_local_port_range = 1024 65535
 
-```net.ipv4.tcp_tw_recycle = 1```
-```net.ipv4.tcp_tw_reuse = 1```
-```net.ipv4.tcp_fin_timeout = 1```
-```net.ipv4.tcp_timestamps = 1```
-```net.ipv4.tcp_syncookies = 0```
-```net.ipv4.ip_local_port_range = 1024 65535```
-
-```$>sysctl -p /etc/sysctl.conf```
+    $>sysctl -p /etc/sysctl.conf
+```
 
 6. The implementation of Netty & Grizzly write to disk in blocking fashion, a better approach is to implement lazy writer (kind of hell in event based implementation)
 7. To build the cpp example (cmpxchg16/Mordor) - goto project page and see how to build.
@@ -209,6 +213,7 @@ License
 ================
 
 Licensed under the New BSD License.
+
 
 Author
 ================
