@@ -208,6 +208,10 @@ Notes
 
 6. The implementation of Netty & Grizzly write to disk in blocking fashion, a better approach is to implement lazy writer (kind of hell in event based implementation)
 7. To build the cpp example (cmpxchg16/Mordor) - goto project page and see how to build.
+8. The first test was done on SSD the second one on tmpfs:
+```
+    mount -t tmpfs -o size=1512m tmpfs /tmp
+```
 
 
 License
