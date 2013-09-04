@@ -200,7 +200,9 @@ Notes
 ```net.ipv4.ip_local_port_range = 1024 65535```
 
 ```$>sysctl -p /etc/sysctl.conf```
+
 6. The implementation of Netty & Grizzly write to disk in blocking fashion, a better approach is to implement lazy writer (kind of hell in event based implementation)
+7. To build the cpp example (cmpxchg16/Mordor) - goto project page and see how to build.
 
 
 License
