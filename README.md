@@ -200,7 +200,7 @@ Notes
     CPU : Intel(R) Core(TM) i7-3720QM CPU @ 2.60GHz (4 cores)
     RAM : 8 GB 1600 MHz DDR3
 ```
-11. tcp sysctl configuration for client and server:
+11. tcp sysctl server configuration:
 ```
     net.ipv4.tcp_tw_recycle = 1
     net.ipv4.tcp_tw_reuse = 1
@@ -211,7 +211,12 @@ Notes
 
     $>sysctl -p /etc/sysctl.conf
 ```
-12. The first test was done on SSD, the second one on tmpfs:
+12. server limits configuration
+```
+change the maximum of open files:
+$>ulimit -n 200000
+```
+13. The first test was done on SSD, the second one on tmpfs:
 ```
     mount -t tmpfs -o size=1512m tmpfs /tmp
 ```
