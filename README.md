@@ -168,7 +168,7 @@ Benchmark
 
 ### Conclusions:
 1. cmpxchg16/Mordor give the best results both SSD & tmpfs
-2. Go win the Node.js
+2. Go better than Node.js
 3. Netty & Grizzly looking the ~= same
 4. The simplest one is Go
 
@@ -176,10 +176,16 @@ Benchmark
 Notes
 ================
 
-1. Because Node.js doesn't have threads configuration, I run 4 instances and the client round-robin between them.
-2. The implemetations missing some errors handling.
-3. I run the test 3 times for each server and choose the best one.
-4. Environment:
+1. The Netty & Grizzly & Node.js implementations are based on examples those frameworks supplied.
+2. Because Node.js work in a model of one thread, I run 4 instances of Node.js process and the client round-robin between those processes.
+3. The implemetations missing some errors handling, but on each test I verified that the: number of requests == number of successfully files.
+4. The implementation of Netty based on full http request handling, because the payload are small it's valid, in case of big payload better implementation are based on streaming chunks to file (look@OrderedMemoryAwareThreadPoolExecutor)
+5. The Grizzly thread pool configured with the number of cores (4), Netty provide implementation that based on CachedThreadPool (no limit on number of threads - the system can open how much it need).
+6. I ran the test 3 times for each server and choose the best one.
+7. The implementations of Netty & Grizzly write to disk in a blocking fashion, a better approach is to implement lazy writer (kind of hell in event model)
+8. I don't test on spindle HDD, but if you decide to test it you should also pay attention on the configuration of writeback mechanism in Linux (how the dirty cache buffered pages flushed to disk)
+9. To build the cpp example (cmpxchg16/Mordor) - goto project page and see how to build.
+10. Environment:
 ```
     Server:
 
@@ -194,7 +200,7 @@ Notes
     CPU : Intel(R) Core(TM) i7-3720QM CPU @ 2.60GHz (4 cores)
     RAM : 8 GB 1600 MHz DDR3
 ```
-5. tcp sysctl configuration for client and server:
+11. tcp sysctl configuration for client and server:
 ```
     net.ipv4.tcp_tw_recycle = 1
     net.ipv4.tcp_tw_reuse = 1
@@ -205,10 +211,7 @@ Notes
 
     $>sysctl -p /etc/sysctl.conf
 ```
-
-6. The implementation of Netty & Grizzly write to disk in blocking fashion, a better approach is to implement lazy writer (kind of hell in event based implementation)
-7. To build the cpp example (cmpxchg16/Mordor) - goto project page and see how to build.
-8. The first test was done on SSD the second one on tmpfs:
+12. The first test was done on SSD, the second one on tmpfs:
 ```
     mount -t tmpfs -o size=1512m tmpfs /tmp
 ```
