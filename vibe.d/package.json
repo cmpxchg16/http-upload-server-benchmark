@@ -1,0 +1,8 @@
+﻿{
+	"name": "http-upload-server example",
+	"description": "Simple http upload server based on HTTP post",
+	"authors": [ "Uri Shamay" ],
+	"dependencies": {
+		"vibe-d": {"version": "~master", "path": "../../"}
+	}
+}

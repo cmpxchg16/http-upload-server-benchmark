@@ -8,7 +8,7 @@ The benchmarks include 2 persistent options:
 1. SSD device
 2. tmpfs
 
-The Go & cmpxchg16/Mordor programming approach based on green threads (goroutines & Fibers) with synchronous handling.
+The Go & cmpxchg16/Mordor & D + vibe.d programming approach based on green threads (goroutines & Fibers) with synchronous handling.
 The Java (Netty & Grizzly frameworks) & Node.js programming approach based on event asynchronous callback handling.
 
 
@@ -165,6 +165,35 @@ Benchmark
     Write throughput:                110690736 bytes/sec
     Test time:                              10 sec
 
+###D + vibe.d
+####SSD
+    $>go run gobench.go -k=true -u http://169.254.145.145:8080/upload -c 500 -t 10 -d gobench.go
+    Dispatching 500 clients
+    Waiting for results...
+
+    Requests:                            55803 hits
+    Successful requests:                 55803 hits
+    Network failed:                          0 hits
+    Bad requests failed (!2xx):              0 hits
+    Successfull requests rate:            5580 hits/sec
+    Read throughput:                   1183023 bytes/sec
+    Write throughput:                 60244210 bytes/sec
+    Test time:                              10 sec
+
+####tmpfs
+    $>go run gobench.go -k=true -u http://169.254.145.145:8080/upload -c 500 -t 10 -d gobench.go
+    Dispatching 500 clients
+    Waiting for results...
+
+    Requests:                            70451 hits
+    Successful requests:                 70451 hits
+    Network failed:                          0 hits
+    Bad requests failed (!2xx):              0 hits
+    Successfull requests rate:            7045 hits/sec
+    Read throughput:                   1493561 bytes/sec
+    Write throughput:                 75917570 bytes/sec
+    Test time:                              10 sec
+
 
 ### Conclusions:
 1. cmpxchg16/Mordor give the best results both SSD & tmpfs
@@ -185,7 +214,8 @@ Notes
 7. The implementations of Netty & Grizzly write to disk in a blocking fashion, a better approach is to implement lazy writer (kind of hell in event model)
 8. I don't test on spindle HDD, but if you decide to test it you should also pay attention on the configuration of writeback mechanism in Linux (how the dirty cache buffered pages flushed to disk)
 9. To build the cpp example (cmpxchg16/Mordor) - goto project page and see how to build.
-10. Environment:
+10. To build the vibe.d, follow the instructions inside the project documentation (the test done via dub with release build)
+11. Environment:
 ```
     Server:
 
@@ -200,7 +230,7 @@ Notes
     CPU : Intel(R) Core(TM) i7-3720QM CPU @ 2.60GHz (4 cores)
     RAM : 8 GB 1600 MHz DDR3
 ```
-11. tcp sysctl server configuration:
+12. tcp sysctl server configuration:
 ```
     net.ipv4.tcp_tw_recycle = 1
     net.ipv4.tcp_tw_reuse = 1
@@ -211,12 +241,12 @@ Notes
 
     $>sysctl -p /etc/sysctl.conf
 ```
-12. server limits configuration
+13. server limits configuration
 ```
 change the maximum of open files:
 $>ulimit -n 200000
 ```
-13. The first test was done on SSD, the second one on tmpfs:
+14. The first test was done on SSD, the second one on tmpfs:
 ```
     mount -t tmpfs -o size=1512m tmpfs /tmp
 ```
