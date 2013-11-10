@@ -8,7 +8,7 @@ The benchmarks include 2 persistent options:
 1. SSD device
 2. tmpfs
 
-The Go & cmpxchg16/Mordor & D + vibe.d programming approach based on green threads (goroutines & Fibers) with synchronous handling.
+The Go & cmpxchg16/Mordor & vibe.d programming approach based on green threads (goroutines & Fibers) with synchronous handling.
 The Java (Netty & Grizzly frameworks) & Node.js programming approach based on event asynchronous callback handling.
 
 
@@ -165,7 +165,7 @@ Benchmark
     Write throughput:                110690736 bytes/sec
     Test time:                              10 sec
 
-###D + vibe.d
+###vibe.d:
 ####SSD
     $>go run gobench.go -k=true -u http://169.254.145.145:8080/upload -c 500 -t 10 -d gobench.go
     Dispatching 500 clients
@@ -197,7 +197,7 @@ Benchmark
 
 ### Conclusions:
 1. cmpxchg16/Mordor give the best results both SSD & tmpfs
-2. Go better than Node.js
+2. Go better than Node.js & vibe.d
 3. Netty & Grizzly looking the ~= same
 4. The simplest one is Go
 
